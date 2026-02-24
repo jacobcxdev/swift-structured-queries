@@ -34,11 +34,11 @@ let package = Package(
     ),
   ],
   dependencies: [
-    .package(url: "https://github.com/jacobcxdev/swift-custom-dump", from: "1.3.3"),
-    .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.8.1"),
+    .package(path: "../swift-custom-dump"),
+    .package(path: "../swift-dependencies"),
     .package(url: "https://github.com/pointfreeco/swift-macro-testing", from: "0.6.3"),
-    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.18.4"),
-    .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", from: "1.5.2"),
+    .package(path: "../swift-snapshot-testing"),
+    .package(path: "../xctest-dynamic-overlay"),
     .package(url: "https://github.com/swiftlang/swift-syntax", "600.0.0"..<"603.0.0"),
   ],
   targets: [
