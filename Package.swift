@@ -9,6 +9,8 @@ import PackageDescription
   import Foundation
 #endif
 
+let android = Context.environment["TARGET_OS_ANDROID"] ?? "0" != "0"
+
 let package = Package(
   name: "swift-structured-queries",
   platforms: [
@@ -34,11 +36,13 @@ let package = Package(
       name: "StructuredQueriesSQLiteCore",
       targets: ["StructuredQueriesSQLiteCore"]
     ),
-    .library(
-      name: "StructuredQueriesTestSupport",
-      targets: ["StructuredQueriesTestSupport"]
-    ),
-  ],
+  ]
+    + (android ? [] : [
+      .library(
+        name: "StructuredQueriesTestSupport",
+        targets: ["StructuredQueriesTestSupport"]
+      ),
+    ]),
   traits: [
     .trait(
       name: "StructuredQueriesCasePaths",
@@ -53,12 +57,13 @@ let package = Package(
     .package(path: "../swift-case-paths"),
     .package(path: "../swift-custom-dump"),
     .package(path: "../swift-dependencies"),
-    .package(url: "https://github.com/pointfreeco/swift-macro-testing", from: "0.6.3"),
-    .package(path: "../swift-snapshot-testing"),
     .package(url: "https://github.com/pointfreeco/swift-tagged", from: "0.10.0"),
     .package(path: "../xctest-dynamic-overlay"),
     .package(url: "https://github.com/swiftlang/swift-syntax", "600.0.0"..<"603.0.0"),
-  ],
+  ]
+    + (android ? [] : [
+      .package(path: "../swift-snapshot-testing"),
+    ]),
   targets: [
     .target(
       name: "StructuredQueries",
@@ -117,6 +122,21 @@ let package = Package(
     ),
 
     .target(
+      name: "_StructuredQueriesSQLite",
+      dependencies: [
+        "StructuredQueriesSQLite"
+      ]
+    ),
+  ],
+  swiftLanguageModes: [.v6]
+)
+
+if !android {
+  package.dependencies += [
+    .package(url: "https://github.com/pointfreeco/swift-macro-testing", from: "0.6.3"),
+  ]
+  package.targets += [
+    .target(
       name: "StructuredQueriesTestSupport",
       dependencies: [
         "StructuredQueriesCore",
@@ -145,16 +165,8 @@ let package = Package(
         .product(name: "InlineSnapshotTesting", package: "swift-snapshot-testing"),
       ]
     ),
-
-    .target(
-      name: "_StructuredQueriesSQLite",
-      dependencies: [
-        "StructuredQueriesSQLite"
-      ]
-    ),
-  ],
-  swiftLanguageModes: [.v6]
-)
+  ]
+}
 
 if ProcessInfo.processInfo.environment["SPI_GENERATE_DOCS"] != nil
   || (ProcessInfo.processInfo.environment["GITHUB_ACTION_REPOSITORY"] ?? "").contains(

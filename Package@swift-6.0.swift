@@ -36,7 +36,7 @@ let package = Package(
   dependencies: [
     .package(path: "../swift-custom-dump"),
     .package(path: "../swift-dependencies"),
-    .package(url: "https://github.com/pointfreeco/swift-macro-testing", from: "0.6.3"),
+    .package(path: "../swift-macro-testing"),
     .package(path: "../swift-snapshot-testing"),
     .package(path: "../xctest-dynamic-overlay"),
     .package(url: "https://github.com/swiftlang/swift-syntax", "600.0.0"..<"603.0.0"),
